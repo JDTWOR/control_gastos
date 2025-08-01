@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 01, 2025 at 03:37 AM
+-- Generation Time: Aug 01, 2025 at 09:16 AM
 -- Server version: 8.0.42-0ubuntu0.24.04.2
 -- PHP Version: 8.3.6
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `categorias` (
-  `id` int NOT NULL,
+  `id` bigint NOT NULL,
   `nombre` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -39,10 +39,9 @@ CREATE TABLE `categorias` (
 --
 
 CREATE TABLE `gastos` (
-  `id` int NOT NULL,
-  `nombre` varchar(255) NOT NULL,
-  `valor` int NOT NULL,
-  `id_categoria` int NOT NULL
+  `id` bigint NOT NULL,
+  `nombre` varchar(255) DEFAULT NULL,
+  `valor` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -52,9 +51,9 @@ CREATE TABLE `gastos` (
 --
 
 CREATE TABLE `gasto_categoria` (
-  `id` int NOT NULL,
-  `id_gasto` int NOT NULL,
-  `id_categoria` int NOT NULL
+  `id` bigint NOT NULL,
+  `id_gasto` bigint NOT NULL,
+  `id_categoria` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -64,12 +63,9 @@ CREATE TABLE `gasto_categoria` (
 --
 
 CREATE TABLE `usuarios` (
-  `id` int NOT NULL,
-  `primer_nombre` varchar(255) NOT NULL,
-  `segundo_nombre` varchar(255) DEFAULT NULL,
-  `primer_apellido` varchar(255) NOT NULL,
-  `segundo_apellido` varchar(255) DEFAULT NULL,
-  `correo` varchar(255) NOT NULL
+  `id` bigint NOT NULL,
+  `nombre_usuario` varchar(255) NOT NULL,
+  `contrasena` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -79,9 +75,9 @@ CREATE TABLE `usuarios` (
 --
 
 CREATE TABLE `usuario_gasto_categoria` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_gasto_categoria` int NOT NULL
+  `id` bigint NOT NULL,
+  `id_usuario` bigint NOT NULL,
+  `id_gasto_categoria` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -98,8 +94,7 @@ ALTER TABLE `categorias`
 -- Indexes for table `gastos`
 --
 ALTER TABLE `gastos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_categoria` (`id_categoria`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `gasto_categoria`
@@ -131,55 +126,49 @@ ALTER TABLE `usuario_gasto_categoria`
 -- AUTO_INCREMENT for table `categorias`
 --
 ALTER TABLE `categorias`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `gastos`
 --
 ALTER TABLE `gastos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `gasto_categoria`
 --
 ALTER TABLE `gasto_categoria`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `usuario_gasto_categoria`
 --
 ALTER TABLE `usuario_gasto_categoria`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `gastos`
---
-ALTER TABLE `gastos`
-  ADD CONSTRAINT `gastos_ibfk_1` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`);
-
---
 -- Constraints for table `gasto_categoria`
 --
 ALTER TABLE `gasto_categoria`
-  ADD CONSTRAINT `gasto_categoria_ibfk_1` FOREIGN KEY (`id_gasto`) REFERENCES `gastos` (`id`),
-  ADD CONSTRAINT `gasto_categoria_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`);
+  ADD CONSTRAINT `gasto_categoria_ibfk_1` FOREIGN KEY (`id_gasto`) REFERENCES `gastos` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `gasto_categoria_ibfk_2` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 --
 -- Constraints for table `usuario_gasto_categoria`
 --
 ALTER TABLE `usuario_gasto_categoria`
-  ADD CONSTRAINT `usuario_gasto_categoria_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `usuario_gasto_categoria_ibfk_2` FOREIGN KEY (`id_gasto_categoria`) REFERENCES `gasto_categoria` (`id`);
+  ADD CONSTRAINT `usuario_gasto_categoria_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+  ADD CONSTRAINT `usuario_gasto_categoria_ibfk_2` FOREIGN KEY (`id_gasto_categoria`) REFERENCES `gasto_categoria` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
